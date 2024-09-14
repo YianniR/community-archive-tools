@@ -10,7 +10,8 @@ def main():
 
     end_date = datetime.now()
     start_date = end_date - timedelta(days=365)
-    date_range = st.date_input("Select date range", value=(start_date, end_date), max_value=end_date)
+    origin = datetime.strptime("2008-01-01", '%Y-%m-%d')
+    date_range = st.date_input("Select date range", value=(start_date, end_date), min_value=origin, max_value=end_date)
 
     username = st.text_input('Twitter username')
     ma_window = st.number_input('Moving average window size', min_value=1, max_value=365, value=30)
@@ -33,6 +34,7 @@ def main():
             'end_date': end_date,
             'usernames': [username],
             'ma_window': int(ma_window),
+            'keywords': None
         })()
 
         with st.spinner('Analyzing sentiment...'):

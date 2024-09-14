@@ -54,7 +54,8 @@ class AccountFetcher(SupabaseClient):
 class TweetFetcher(SupabaseClient):
     def fetch_batch(self, account_id: Optional[int] = None, offset: int = 0, limit: int = 1000, 
                     start_date: Optional[datetime] = None, 
-                    end_date: Optional[datetime] = None) -> List[Dict]:
+                    end_date: Optional[datetime] = None,
+                    keywords: Optional[List[str]] = None) -> List[Dict]:
         query = self.client.table('tweets').select('*').order('created_at', desc=True).range(offset, offset + limit - 1)
         
         if account_id is not None:
@@ -63,6 +64,10 @@ class TweetFetcher(SupabaseClient):
         if start_date and end_date:
             query = query.gte('created_at', start_date.isoformat()).lte('created_at', end_date.isoformat())
 
+        if keywords:
+            keyword_string = ' | '.join(keywords)  # Join keywords with OR operator
+            query = query.text_search('full_text', keyword_string)
+
         try:
             logging.info(f"Making request to fetch tweets")
             response = query.execute()
@@ -70,18 +75,20 @@ class TweetFetcher(SupabaseClient):
             return response.data
         except Exception as e:
             logging.error(f"Error fetching tweets: {str(e)}")
+            logging.error(f"Query details: {query._query}")  # Log the query details for debugging
             return []
 
     def fetch_all(self, account_id: Optional[int] = None, 
                   start_date: Optional[Union[str, datetime]] = None, 
-                  end_date: Optional[Union[str, datetime]] = None) -> List[Dict]:
+                  end_date: Optional[Union[str, datetime]] = None,
+                  keywords: Optional[List[str]] = None) -> List[Dict]:
         all_tweets = []
         offset = 0
         batch_size = 1000
    
         while True:
             logging.info(f"Fetching tweets {offset} to {offset + batch_size}...")
-            batch = self.fetch_batch(account_id, offset, batch_size, start_date, end_date)
+            batch = self.fetch_batch(account_id, offset, batch_size, start_date, end_date, keywords)
            
             if not batch:
                 break
@@ -123,7 +130,7 @@ def fetch_data_main(args):
             continue
 
         logging.info(f"Fetching tweets for {username}")
-        user_tweets = tweet_fetcher.fetch_all(account_id, args.start_date, args.end_date)
+        user_tweets = tweet_fetcher.fetch_all(account_id, args.start_date, args.end_date, args.keywords)
         logging.info(f"Total tweets for user @{username}: {len(user_tweets)}")
 
         if not user_tweets:
@@ -147,5 +154,6 @@ if __name__ == "__main__":
     parser.add_argument("usernames", nargs='+', help="Twitter usernames to fetch data for")
     parser.add_argument("--start_date", help="Start date for tweet fetch (YYYY-MM-DD)")
     parser.add_argument("--end_date", help="End date for tweet fetch (YYYY-MM-DD)")
+    parser.add_argument("--keywords", nargs='*', help="Keywords to filter tweets (optional)")
     args = parser.parse_args()
     fetch_data_main(args)

@@ -20,7 +20,8 @@ def main():
     fetch_data_parser.add_argument("usernames", nargs='+', help="Twitter usernames to fetch data for")
     fetch_data_parser.add_argument("--start-date", help="Start date for tweet fetch (YYYY-MM-DD)")
     fetch_data_parser.add_argument("--end-date", help="End date for tweet fetch (YYYY-MM-DD)")
-
+    fetch_data_parser.add_argument("--keywords", nargs='*', help="Keywords to filter tweets (optional)")
+    
     # Fetch Data parser
     fetch_data_parser = subparsers.add_parser("user_stats", help="Calculate user statistics")
     fetch_data_parser.add_argument("usernames", nargs='+', help="Twitter usernames to fetch data for")
