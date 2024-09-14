@@ -5,7 +5,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import logging
 import nltk
-from nltk.tokenize import word_tokenize
+from nltk.tokenize import WordPunctTokenizer
 import os
 from dateutil.parser import parse
 
@@ -39,9 +39,6 @@ sia = SentimentIntensityAnalyzer()
 def sentiment_analyzer(text):
     return [{'score': sia.polarity_scores(text)['compound']}]
 
-# Download necessary NLTK data
-nltk.download('punkt_tab', quiet=True)
-
 from config import NRC_LEXICON_FILE
 
 def load_nrc_lexicon(file_path=NRC_LEXICON_FILE):
@@ -61,7 +58,7 @@ def load_nrc_lexicon(file_path=NRC_LEXICON_FILE):
 emotion_lexicon = load_nrc_lexicon()
 
 def analyze_emotions(text):
-    words = pd.Series(word_tokenize(text.lower()))
+    words = pd.Series(WordPunctTokenizer(text.lower()))
     emotions = words.map(emotion_lexicon).explode()
     emotion_counts = emotions.value_counts()
     total = emotion_counts.sum()
