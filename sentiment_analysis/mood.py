@@ -40,7 +40,7 @@ def sentiment_analyzer(text):
     return [{'score': sia.polarity_scores(text)['compound']}]
 
 # Download necessary NLTK data
-nltk.download('punkt', quiet=True)
+nltk.download('punkt_tab', quiet=True)
 
 from config import NRC_LEXICON_FILE
 
