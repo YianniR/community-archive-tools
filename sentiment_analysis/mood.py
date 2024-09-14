@@ -216,22 +216,6 @@ def plot_mood_meter(mood_data, ma_window=1, username=None, start_date=None, end_
     fig.update_yaxes(title_text="Sentiment (-1 to 1)", row=1, col=1)
     fig.update_yaxes(title_text="Emotion Intensity (0 to 1)", row=2, col=1)
     
-    # Add annotations
-    fig.add_annotation(
-        text="Positive",
-        xref="paper", yref="y",
-        x=1.02, y=0.75,
-        showarrow=False,
-        row=1, col=1
-    )
-    fig.add_annotation(
-        text="Negative",
-        xref="paper", yref="y",
-        x=1.02, y=-0.75,
-        showarrow=False,
-        row=1, col=1
-    )
-    
     logging.info("Plotly figure created successfully")
     return fig
 
