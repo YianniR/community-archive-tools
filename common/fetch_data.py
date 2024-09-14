@@ -92,7 +92,7 @@ class TweetFetcher(SupabaseClient):
             if len(batch) < batch_size:
                 break
            
-            time.sleep(0.1)  # To avoid hitting rate limits
+            time.sleep(0.01)  # To avoid hitting rate limits
    
         logging.info(f"Total tweets fetched: {len(all_tweets)}")
         return all_tweets
