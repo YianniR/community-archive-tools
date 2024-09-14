@@ -61,7 +61,7 @@ def load_nrc_lexicon(file_path=NRC_LEXICON_FILE):
 emotion_lexicon = load_nrc_lexicon()
 
 def analyze_emotions(text):
-    words = pd.Series(WordPunctTokenizer(text.lower()))
+    words = pd.Series(WordPunctTokenizer().tokenize(text.lower()))
     emotions = words.map(emotion_lexicon).explode()
     emotion_counts = emotions.value_counts()
     total = emotion_counts.sum()
