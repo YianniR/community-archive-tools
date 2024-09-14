@@ -168,7 +168,6 @@ data/*
 !data/.gitkeep
 output/*
 !output/.gitkeep
-sentiment_analysis/NRC-Emotion-Lexicon-Wordlevel-v0.92.txt
 
 # Ignore all files in the data directory except .gitkeep
 data/*

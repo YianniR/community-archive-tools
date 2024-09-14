@@ -39,9 +39,6 @@ sia = SentimentIntensityAnalyzer()
 def sentiment_analyzer(text):
     return [{'score': sia.polarity_scores(text)['compound']}]
 
-# Download necessary NLTK data
-nltk.download('punkt')
-
 from config import NRC_LEXICON_FILE
 
 def load_nrc_lexicon(file_path=NRC_LEXICON_FILE):
