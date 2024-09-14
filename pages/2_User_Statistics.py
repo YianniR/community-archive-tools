@@ -20,7 +20,8 @@ def main():
         args = type('Args', (), {
             'usernames': [username],
             'start_date': None,
-            'end_date': None
+            'end_date': None,
+            'keywords': None
         })()
 
         with st.spinner('Generating user statistics...'):
