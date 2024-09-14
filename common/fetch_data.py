@@ -77,7 +77,7 @@ class TweetFetcher(SupabaseClient):
                   end_date: Optional[Union[str, datetime]] = None) -> List[Dict]:
         all_tweets = []
         offset = 0
-        batch_size = 1000
+        batch_size = 5000
    
         while True:
             logging.info(f"Fetching tweets {offset} to {offset + batch_size}...")
