@@ -52,7 +52,7 @@ class AccountFetcher(SupabaseClient):
         return all_accounts
 
 class TweetFetcher(SupabaseClient):
-    def fetch_batch(self, account_id: Optional[int] = None, offset: int = 0, limit: int = 1000, 
+    def fetch_batch(self, account_id: Optional[int] = None, offset: int = 0, limit: int = 5000, 
                     start_date: Optional[datetime] = None, 
                     end_date: Optional[datetime] = None) -> List[Dict]:
         query = self.client.table('tweets').select('*').order('created_at', desc=True).range(offset, offset + limit - 1)
