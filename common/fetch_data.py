@@ -22,7 +22,7 @@ class SupabaseClient:
 class AccountFetcher(SupabaseClient):
     def fetch_batch(self, offset: int = 0, limit: int = 1000) -> List[Dict]:
         try:
-            response = self.client.table('account').select('*').range(offset, offset + limit).execute()
+            response = self.client.table('account').select('*').range(offset, offset + limit - 1).execute()
             return response.data
         except Exception as e:
             logging.error(f"Error fetching accounts batch: {str(e)}")
@@ -52,10 +52,10 @@ class AccountFetcher(SupabaseClient):
         return all_accounts
 
 class TweetFetcher(SupabaseClient):
-    def fetch_batch(self, account_id: Optional[int] = None, offset: int = 0, limit: int = 5000, 
+    def fetch_batch(self, account_id: Optional[int] = None, offset: int = 0, limit: int = 1000, 
                     start_date: Optional[datetime] = None, 
                     end_date: Optional[datetime] = None) -> List[Dict]:
-        query = self.client.table('tweets').select('*').order('created_at', desc=True).range(offset, offset + limit)
+        query = self.client.table('tweets').select('*').order('created_at', desc=True).range(offset, offset + limit - 1)
         
         if account_id is not None:
             query = query.eq('account_id', account_id)
@@ -77,7 +77,7 @@ class TweetFetcher(SupabaseClient):
                   end_date: Optional[Union[str, datetime]] = None) -> List[Dict]:
         all_tweets = []
         offset = 0
-        batch_size = 5000
+        batch_size = 1000
    
         while True:
             logging.info(f"Fetching tweets {offset} to {offset + batch_size}...")
