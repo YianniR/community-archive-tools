@@ -20,7 +20,7 @@ class SupabaseClient:
         self.client: Client = create_client(SUPABASE_URL, API_TOKEN)
 
 class AccountFetcher(SupabaseClient):
-    def fetch_batch(self, offset: int = 0, limit: int = 3000) -> List[Dict]:
+    def fetch_batch(self, offset: int = 0, limit: int = 1000) -> List[Dict]:
         try:
             response = self.client.table('account').select('*').range(offset, offset + limit - 1).execute()
             return response.data
@@ -52,7 +52,7 @@ class AccountFetcher(SupabaseClient):
         return all_accounts
 
 class TweetFetcher(SupabaseClient):
-    def fetch_batch(self, account_id: Optional[int] = None, offset: int = 0, limit: int = 3000, 
+    def fetch_batch(self, account_id: Optional[int] = None, offset: int = 0, limit: int = 1000, 
                     start_date: Optional[datetime] = None, 
                     end_date: Optional[datetime] = None) -> List[Dict]:
         query = self.client.table('tweets').select('*').order('created_at', desc=True).range(offset, offset + limit - 1)
@@ -92,7 +92,7 @@ class TweetFetcher(SupabaseClient):
             if len(batch) < batch_size:
                 break
            
-            time.sleep(0.2)  # To avoid hitting rate limits
+            time.sleep(0.1)  # To avoid hitting rate limits
    
         logging.info(f"Total tweets fetched: {len(all_tweets)}")
         return all_tweets
