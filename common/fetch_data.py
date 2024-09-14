@@ -31,7 +31,7 @@ class AccountFetcher(SupabaseClient):
     def fetch_all(self) -> List[Dict]:
         all_accounts = []
         offset = 0
-        batch_size = 1000
+        batch_size = 3000
 
         while True:
             logging.info(f"Fetching accounts {offset} to {offset + batch_size}...")
@@ -46,7 +46,7 @@ class AccountFetcher(SupabaseClient):
             if len(batch) < batch_size:
                 break
             
-            time.sleep(1)  # To avoid hitting rate limits
+            time.sleep(0.1)  # To avoid hitting rate limits
 
         logging.info(f"Total accounts fetched: {len(all_accounts)}")
         return all_accounts
