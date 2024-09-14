@@ -48,7 +48,7 @@ def main():
             st.plotly_chart(fig, use_container_width=True)
             
             # Save the figure as a PNG file
-            output_filename = f'sentiment_analysis_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png'
+            output_filename = f'sentiment_analysis_{username}_{datetime.now().strftime("%Y%m%d_%H%M%S")}.png'
             output_path = save_plot_as_image(fig, output_filename)
             
             if output_path:

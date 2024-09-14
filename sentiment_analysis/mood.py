@@ -1,17 +1,14 @@
-import pickle
 import pandas as pd
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-from datetime import datetime, timedelta
+
 import logging
 import nltk
 from nltk.tokenize import word_tokenize
 import os
 from dateutil.parser import parse
-from dateutil.tz import tzutc
-import numpy as np
-import matplotlib.pyplot as plt
+
 import multiprocessing
 import time
 from joblib import Memory
@@ -124,6 +121,26 @@ def aggregate_mood(df, freq='D'):
 def calculate_moving_average(data, window):
     return data.rolling(window=window, min_periods=1).mean()
 
+def assign_emotion_colors(emotions):
+    # Hardcoded color mapping for emotions
+    # Colors are in RGB format (0-255 for each channel)
+    emotion_color_dict = {
+        'anger': (1.0, 0.0, 0.0),      # Red
+        'fear': (0.5, 0.0, 0.5),       # Purple
+        'anticipation': (1.0, 0.65, 0.0),  # Orange
+        'trust': (0.0, 1.0, 0.0),      # Green
+        'surprise': (0.0, 1.0, 1.0),   # Cyan
+        'sadness': (0.0, 0.0, 1.0),    # Blue
+        'joy': (1.0, 0.75, 0.8),       # Pink
+        'disgust': (0.65, 0.16, 0.16)  # Brown
+    }
+    
+    # Assign colors to the input emotions
+    colors = [emotion_color_dict.get(emotion, (0.5, 0.5, 0.5)) for emotion in emotions]
+    
+    
+    return colors
+
 @timing_decorator
 def plot_mood_meter(mood_data, ma_window=1, username=None, start_date=None, end_date=None, selected_emotions=None):
     logging.info(f"Starting plot_mood_meter function with {len(mood_data)} data points")
@@ -133,8 +150,8 @@ def plot_mood_meter(mood_data, ma_window=1, username=None, start_date=None, end_
     print(f"selected_emotions: {selected_emotions}")
     
     emotions = [col for col in mood_data.columns if col != 'sentiment' and (selected_emotions is None or selected_emotions.get(col, False))]
-    colors = plt.cm.rainbow(np.linspace(0, 1, len(emotions)))
-    
+    colors = assign_emotion_colors(emotions)
+
     fig = make_subplots(rows=2, cols=1, subplot_titles=('Overall Sentiment', 'Emotional Dimensions'))
     
     # Ensure the index is in datetime format

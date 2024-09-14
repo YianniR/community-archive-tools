@@ -1,5 +1,4 @@
 # fetch_data.py
-import requests
 import time
 import os
 import logging
@@ -7,9 +6,8 @@ from dotenv import load_dotenv
 from typing import List, Dict, Optional, Union
 from config import SUPABASE_URL, DATA_DIR
 from .utils import save_pickle
-import json
 from dateutil.parser import parse
-from datetime import datetime, timedelta
+from datetime import datetime
 from supabase import create_client, Client
 
 # Load environment variables and set up logging
