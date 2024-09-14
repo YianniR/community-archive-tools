@@ -31,7 +31,7 @@ class AccountFetcher(SupabaseClient):
     def fetch_all(self) -> List[Dict]:
         all_accounts = []
         offset = 0
-        batch_size = 3000
+        batch_size = 1000
 
         while True:
             logging.info(f"Fetching accounts {offset} to {offset + batch_size}...")
@@ -77,7 +77,7 @@ class TweetFetcher(SupabaseClient):
                   end_date: Optional[Union[str, datetime]] = None) -> List[Dict]:
         all_tweets = []
         offset = 0
-        batch_size = 3000
+        batch_size = 1000
    
         while True:
             logging.info(f"Fetching tweets {offset} to {offset + batch_size}...")
